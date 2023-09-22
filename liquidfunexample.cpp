@@ -14,6 +14,7 @@ LiquidFunExample::LiquidFunExample() {
 	b2Vec2 gravity;
 	gravity.Set(0.0f, -10.0f);
 	m_world = std::make_shared<b2World>(gravity);
+	m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
 }
 
 LiquidFunExample::~LiquidFunExample() {
