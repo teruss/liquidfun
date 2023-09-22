@@ -5,8 +5,8 @@
 
 namespace godot {
 
-class LiquidFunExample : public Object {
-    GDCLASS(LiquidFunExample, Object)
+class LiquidFunExample : public Control {
+    GDCLASS(LiquidFunExample, Control)
 
 private:
     double time_passed;
@@ -18,7 +18,7 @@ public:
     LiquidFunExample();
     ~LiquidFunExample();
 
-    void _process(double delta);
+    float get_pressure_strength();
 };
 
 }
