@@ -1,5 +1,6 @@
 #include "liquidfunexample.h"
 #include <godot_cpp/core/class_db.hpp>
+#include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Particle/b2ParticleSystem.h>
 
 using namespace godot;
@@ -9,10 +10,10 @@ void LiquidFunExample::_bind_methods() {
 }
 
 LiquidFunExample::LiquidFunExample() {
-    // Initialize any variables here.
-    time_passed = 0.0;
-
 	const b2ParticleSystemDef particleSystemDef;
+	b2Vec2 gravity;
+	gravity.Set(0.0f, -10.0f);
+	m_world = std::make_shared<b2World>(gravity);
 }
 
 LiquidFunExample::~LiquidFunExample() {
