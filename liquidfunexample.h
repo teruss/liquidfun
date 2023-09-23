@@ -23,6 +23,7 @@ public:
     ~LiquidFunExample();
 
     float get_pressure_strength();
+    void mouse_move(const Vector2 &pos);
 };
 
 }
