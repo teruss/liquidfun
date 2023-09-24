@@ -43,3 +43,9 @@ void LiquidFunExample::mouse_move(const Vector2 &pos) {
     pd.shape = &shape;
     m_particleSystem->CreateParticleGroup(pd);
 }
+
+void LiquidFunExample::_draw() {
+    draw_line(Vector2(1.5, 1.0), Vector2(1.5, 4.0), Color::named("GREEN"), 1.0);
+    draw_line(Vector2(4.0, 1.0), Vector2(4.0, 4.0), Color::named("GREEN"), 2.0);
+    draw_line(Vector2(7.5, 1.0), Vector2(7.5, 4.0), Color::named("GREEN"), 3.0);
+}
