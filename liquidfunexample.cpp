@@ -10,14 +10,16 @@ using namespace godot;
 void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("get_pressure_strength"), &LiquidFunExample::get_pressure_strength);
     ClassDB::bind_method(D_METHOD("mouse_move"), &LiquidFunExample::mouse_move);
+    ClassDB::bind_method(D_METHOD("get_particle_count"), &LiquidFunExample::get_particle_count);
 }
 
 LiquidFunExample::LiquidFunExample() {
-	const b2ParticleSystemDef particleSystemDef;
-	b2Vec2 gravity;
-	gravity.Set(0.0f, -10.0f);
-	m_world = std::make_shared<b2World>(gravity);
-	m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
+    const b2ParticleSystemDef particleSystemDef;
+    b2Vec2 gravity;
+    gravity.Set(0.0f, -10.0f);
+    m_world = std::make_shared<b2World>(gravity);
+    m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
+    m_particleSystem->SetRadius(0.05f);
 }
 
 LiquidFunExample::~LiquidFunExample() {
@@ -45,7 +47,29 @@ void LiquidFunExample::mouse_move(const Vector2 &pos) {
 }
 
 void LiquidFunExample::_draw() {
-    draw_line(Vector2(1.5, 1.0), Vector2(1.5, 4.0), Color::named("GREEN"), 1.0);
-    draw_line(Vector2(4.0, 1.0), Vector2(4.0, 4.0), Color::named("GREEN"), 2.0);
-    draw_line(Vector2(7.5, 1.0), Vector2(7.5, 4.0), Color::named("GREEN"), 3.0);
+    auto particleCount = m_particleSystem->GetParticleCount();
+    auto positionBuffer = m_particleSystem->GetPositionBuffer();
+
+    auto size = Vector2(1152, 648);
+    auto ratio = size.x / size.y;
+    auto extents = Vector2(25, 25 / ratio) * 0.1;
+    auto settings_view_center = Vector2(0, 2);
+
+    for (int i = 0; i < particleCount; ++i) {
+        auto point = positionBuffer[i];
+        auto lower = settings_view_center - extents;
+        auto upper = settings_view_center + extents;
+        auto u = (point.x - lower.x) / (upper.x - lower.x);
+        auto v = (point.y - lower.y) / (upper.y - lower.y);
+        auto center = Vector2(u * size.x, (1 - v) * size.y);
+        draw_circle(center, 10, Color::named("GREEN"));
+    }
+}
+
+void LiquidFunExample::_process(double delta) {
+    queue_redraw();
+}
+
+int LiquidFunExample::get_particle_count() {
+    return m_particleSystem->GetParticleCount();
 }

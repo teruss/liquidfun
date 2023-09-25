@@ -23,8 +23,10 @@ public:
     ~LiquidFunExample();
 
     float get_pressure_strength();
+    int get_particle_count();
     void mouse_move(const Vector2 &pos);
     void _draw() override;
+    void _process(double delta) override;
 };
 
 }
