@@ -1,5 +1,3 @@
-#include "register_types.h"
-
 #include "liquidfunexample.h"
 
 #include <gdextension_interface.h>

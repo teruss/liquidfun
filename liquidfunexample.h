@@ -12,21 +12,19 @@ class LiquidFunExample : public Control {
     GDCLASS(LiquidFunExample, Control)
 
 private:
-	std::shared_ptr<b2World> m_world;
-	b2ParticleSystem* m_particleSystem;
+    std::shared_ptr<b2World> m_world;
+    b2ParticleSystem* m_particleSystem = nullptr;
 
 protected:
     static void _bind_methods();
 
 public:
     LiquidFunExample();
-    ~LiquidFunExample();
 
-    float get_pressure_strength();
     int get_particle_count();
     void mouse_move(const Vector2 &pos);
     void _draw() override;
-    void _process(double delta) override;
+    void step(float delta);
 };
 
 }

@@ -8,7 +8,7 @@
 using namespace godot;
 
 void LiquidFunExample::_bind_methods() {
-    ClassDB::bind_method(D_METHOD("get_pressure_strength"), &LiquidFunExample::get_pressure_strength);
+    ClassDB::bind_method(D_METHOD("step"), &LiquidFunExample::step);
     ClassDB::bind_method(D_METHOD("mouse_move"), &LiquidFunExample::mouse_move);
     ClassDB::bind_method(D_METHOD("get_particle_count"), &LiquidFunExample::get_particle_count);
 }
@@ -20,16 +20,6 @@ LiquidFunExample::LiquidFunExample() {
     m_world = std::make_shared<b2World>(gravity);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
     m_particleSystem->SetRadius(0.05f);
-}
-
-LiquidFunExample::~LiquidFunExample() {
-    // Add your cleanup here.
-}
-
-float LiquidFunExample::get_pressure_strength() {
-	const b2ParticleSystemDef particleSystemDef;
-
-    return particleSystemDef.pressureStrength;
 }
 
 void LiquidFunExample::mouse_move(const Vector2 &pos) {
@@ -50,7 +40,7 @@ void LiquidFunExample::_draw() {
     auto particleCount = m_particleSystem->GetParticleCount();
     auto positionBuffer = m_particleSystem->GetPositionBuffer();
 
-    auto size = Vector2(1152, 648);
+    auto size = get_size();
     auto ratio = size.x / size.y;
     auto extents = Vector2(25, 25 / ratio) * 0.1;
     auto settings_view_center = Vector2(0, 2);
@@ -62,12 +52,12 @@ void LiquidFunExample::_draw() {
         auto u = (point.x - lower.x) / (upper.x - lower.x);
         auto v = (point.y - lower.y) / (upper.y - lower.y);
         auto center = Vector2(u * size.x, (1 - v) * size.y);
-        draw_circle(center, 10, Color::named("GREEN"));
+        draw_circle(center, 10, Color::named("AQUA"));
     }
 }
 
-void LiquidFunExample::_process(double delta) {
-    queue_redraw();
+void LiquidFunExample::step(float delta) {
+    m_world->Step(delta, 8, 3, 3);
 }
 
 int LiquidFunExample::get_particle_count() {
