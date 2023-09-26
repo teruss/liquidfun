@@ -11,6 +11,7 @@ void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("step"), &LiquidFunExample::step);
     ClassDB::bind_method(D_METHOD("mouse_move"), &LiquidFunExample::mouse_move);
     ClassDB::bind_method(D_METHOD("get_particle_count"), &LiquidFunExample::get_particle_count);
+    ClassDB::bind_method(D_METHOD("set_particle_flags"), &LiquidFunExample::set_particle_flags);
 }
 
 LiquidFunExample::LiquidFunExample() {
@@ -33,6 +34,7 @@ void LiquidFunExample::mouse_move(const Vector2 &pos) {
 
     b2ParticleGroupDef pd;
     pd.shape = &shape;
+    pd.flags = m_particleFlags;
     m_particleSystem->CreateParticleGroup(pd);
 }
 
@@ -62,4 +64,8 @@ void LiquidFunExample::step(float delta) {
 
 int LiquidFunExample::get_particle_count() {
     return m_particleSystem->GetParticleCount();
+}
+
+void LiquidFunExample::set_particle_flags(int flags) {
+    m_particleFlags = flags;
 }
