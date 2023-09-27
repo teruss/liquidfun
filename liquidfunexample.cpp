@@ -15,6 +15,7 @@ void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_particle_flags"), &LiquidFunExample::set_particle_flags);
     ClassDB::bind_method(D_METHOD("set_group_flags"), &LiquidFunExample::set_group_flags);
     ClassDB::bind_method(D_METHOD("set_color"), &LiquidFunExample::set_color);
+    ClassDB::bind_method(D_METHOD("reset_last_group"), &LiquidFunExample::reset_last_group);
 }
 
 LiquidFunExample::LiquidFunExample() {
@@ -40,7 +41,8 @@ void LiquidFunExample::mouse_move(const Vector2 &pos) {
     pd.flags = m_particleFlags;
     pd.groupFlags = m_groupFlags;
     pd.color = b2ParticleColor(m_color.get_r8(), m_color.get_g8(), m_color.get_b8(), m_color.get_a8());
-    m_particleSystem->CreateParticleGroup(pd);
+    pd.group = m_lastGroup;
+    m_lastGroup = m_particleSystem->CreateParticleGroup(pd);
 }
 
 void LiquidFunExample::_draw() {

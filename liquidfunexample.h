@@ -3,6 +3,7 @@
 
 #include <godot_cpp/classes/control.hpp>
 
+class b2ParticleGroup;
 class b2ParticleSystem;
 class b2World;
 
@@ -14,6 +15,8 @@ class LiquidFunExample : public Control {
 private:
     std::shared_ptr<b2World> m_world;
     b2ParticleSystem* m_particleSystem = nullptr;
+
+	b2ParticleGroup* m_lastGroup = nullptr;
     uint32_t m_particleFlags = 0;
     uint32_t m_groupFlags = 0;
     Color m_color;
@@ -39,6 +42,10 @@ public:
     
     void set_group_flags(int flags) {
         m_groupFlags = flags;
+    }
+
+    void reset_last_group() {
+        m_lastGroup = nullptr;
     }
 };
 
