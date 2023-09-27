@@ -1,7 +1,9 @@
 #include "liquidfunexample.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
+#include <Box2D/Collision/Shapes/b2PolygonShape.h>
 #include <Box2D/Common/b2Draw.h>
+#include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Particle/b2ParticleGroup.h>
 #include <Box2D/Particle/b2ParticleSystem.h>
@@ -24,6 +26,56 @@ LiquidFunExample::LiquidFunExample() {
     gravity.Set(0.0f, -10.0f);
     m_world = std::make_shared<b2World>(gravity);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
+
+    {
+        b2BodyDef bd;
+        b2Body* ground = m_world->CreateBody(&bd);
+
+        {
+            b2PolygonShape shape;
+            const b2Vec2 vertices[4] = {
+                b2Vec2(-4, -2),
+                b2Vec2(4, -2),
+                b2Vec2(4, 0),
+                b2Vec2(-4, 0)};
+            shape.Set(vertices, 4);
+            ground->CreateFixture(&shape, 0.0f);
+        }
+
+        {
+            b2PolygonShape shape;
+            const b2Vec2 vertices[4] = {
+                b2Vec2(-4, -2),
+                b2Vec2(-2, -2),
+                b2Vec2(-2, 6),
+                b2Vec2(-4, 6)};
+            shape.Set(vertices, 4);
+            ground->CreateFixture(&shape, 0.0f);
+        }
+
+        {
+            b2PolygonShape shape;
+            const b2Vec2 vertices[4] = {
+                b2Vec2(2, -2),
+                b2Vec2(4, -2),
+                b2Vec2(4, 6),
+                b2Vec2(2, 6)};
+            shape.Set(vertices, 4);
+            ground->CreateFixture(&shape, 0.0f);
+        }
+
+        {
+            b2PolygonShape shape;
+            const b2Vec2 vertices[4] = {
+                b2Vec2(-4, 4),
+                b2Vec2(4, 4),
+                b2Vec2(4, 6),
+                b2Vec2(-4, 6)};
+            shape.Set(vertices, 4);
+            ground->CreateFixture(&shape, 0.0f);
+        }
+    }
+
     m_particleSystem->SetRadius(0.05f);
 }
 
