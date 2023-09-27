@@ -1,6 +1,7 @@
 #include "liquidfunexample.h"
 #include <godot_cpp/core/class_db.hpp>
 #include <Box2D/Collision/Shapes/b2CircleShape.h>
+#include <Box2D/Common/b2Draw.h>
 #include <Box2D/Dynamics/b2World.h>
 #include <Box2D/Particle/b2ParticleGroup.h>
 #include <Box2D/Particle/b2ParticleSystem.h>
@@ -12,6 +13,7 @@ void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("mouse_move"), &LiquidFunExample::mouse_move);
     ClassDB::bind_method(D_METHOD("get_particle_count"), &LiquidFunExample::get_particle_count);
     ClassDB::bind_method(D_METHOD("set_particle_flags"), &LiquidFunExample::set_particle_flags);
+    ClassDB::bind_method(D_METHOD("set_color"), &LiquidFunExample::set_color);
 }
 
 LiquidFunExample::LiquidFunExample() {
@@ -35,12 +37,14 @@ void LiquidFunExample::mouse_move(const Vector2 &pos) {
     b2ParticleGroupDef pd;
     pd.shape = &shape;
     pd.flags = m_particleFlags;
+    pd.color = b2ParticleColor(m_color.get_r8(), m_color.get_g8(), m_color.get_b8(), m_color.get_a8());
     m_particleSystem->CreateParticleGroup(pd);
 }
 
 void LiquidFunExample::_draw() {
     auto particleCount = m_particleSystem->GetParticleCount();
     auto positionBuffer = m_particleSystem->GetPositionBuffer();
+    auto colorBuffer = m_particleSystem->GetColorBuffer();
 
     auto size = get_size();
     auto ratio = size.x / size.y;
@@ -49,12 +53,13 @@ void LiquidFunExample::_draw() {
 
     for (int i = 0; i < particleCount; ++i) {
         auto point = positionBuffer[i];
+        auto color = colorBuffer[i].GetColor();
         auto lower = settings_view_center - extents;
         auto upper = settings_view_center + extents;
         auto u = (point.x - lower.x) / (upper.x - lower.x);
         auto v = (point.y - lower.y) / (upper.y - lower.y);
         auto center = Vector2(u * size.x, (1 - v) * size.y);
-        draw_circle(center, 10, Color::named("AQUA"));
+        draw_circle(center, 10, Color(color.r, color.g, color.b));
     }
 }
 

@@ -15,6 +15,7 @@ private:
     std::shared_ptr<b2World> m_world;
     b2ParticleSystem* m_particleSystem = nullptr;
     uint32_t m_particleFlags = 0;
+    Color m_color;
 
 protected:
     static void _bind_methods();
@@ -27,6 +28,9 @@ public:
     void _draw() override;
     void step(float delta);
     void set_particle_flags(int flags);
+    void set_color(const Color &color) {
+        m_color = color;
+    }
 };
 
 }
