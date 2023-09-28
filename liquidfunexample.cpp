@@ -18,6 +18,7 @@ void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_group_flags"), &LiquidFunExample::set_group_flags);
     ClassDB::bind_method(D_METHOD("set_color"), &LiquidFunExample::set_color);
     ClassDB::bind_method(D_METHOD("reset_last_group"), &LiquidFunExample::reset_last_group);
+    ClassDB::bind_method(D_METHOD("set_gravity"), &LiquidFunExample::set_gravity);
 }
 
 LiquidFunExample::LiquidFunExample() {
@@ -125,4 +126,8 @@ void LiquidFunExample::step(float delta) {
 
 int LiquidFunExample::get_particle_count() {
     return m_particleSystem->GetParticleCount();
+}
+
+void LiquidFunExample::set_gravity(const Vector2 &gravity) {
+    m_world->SetGravity(b2Vec2(gravity.x, gravity.y));
 }

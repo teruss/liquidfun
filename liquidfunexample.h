@@ -31,6 +31,7 @@ public:
     void mouse_move(const Vector2 &pos);
     void _draw() override;
     void step(float delta);
+    void set_gravity(const Vector2 &gravity);
 
     void set_particle_flags(int flags) {
         m_particleFlags = flags;
