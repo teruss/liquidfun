@@ -1,3 +1,4 @@
 
 *.obj
 liquidfun/Box2D/build/
+*.os
