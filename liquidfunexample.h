@@ -32,6 +32,7 @@ public:
     void _draw() override;
     void step(float delta);
     void set_gravity(const Vector2 &gravity);
+    Vector2 convert_screen_to_world(const Vector2 &position);
 
     void set_particle_flags(int flags) {
         m_particleFlags = flags;
