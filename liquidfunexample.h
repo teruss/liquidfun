@@ -30,7 +30,7 @@ public:
     void _ready() override;
     void _draw() override;
     void step(float delta);
-    void set_gravity(const Vector2 &gravity);
+    void set_gravity(float x, float y);
 
     void set_particle_flags(int flags) {
         m_particleFlags = flags;

@@ -23,9 +23,7 @@ void LiquidFunExample::_bind_methods() {
 
 LiquidFunExample::LiquidFunExample() {
     const b2ParticleSystemDef particleSystemDef;
-    b2Vec2 gravity;
-    gravity.Set(0.0f, 10.0f);
-    m_world = std::make_shared<b2World>(gravity);
+    m_world = std::make_shared<b2World>(0, 10);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
     m_particleSystem->SetRadius(0.05f);
     set_color(Color("AQUA"));
@@ -85,10 +83,8 @@ void LiquidFunExample::_draw() {
     auto colorBuffer = m_particleSystem->GetColorBuffer();
 
     for (int i = 0; i < particleCount; ++i) {
-        auto point = positionBuffer[i];
-        auto center = convert_world_to_screen(point);
         auto color = colorBuffer[i].GetColor();
-        draw_circle(center, 10, Color(color.r, color.g, color.b));
+        draw_circle(convert_world_to_screen(positionBuffer[i]), 10, Color(color.r, color.g, color.b));
     }
 }
 
@@ -100,6 +96,6 @@ int LiquidFunExample::get_particle_count() {
     return m_particleSystem->GetParticleCount();
 }
 
-void LiquidFunExample::set_gravity(const Vector2 &gravity) {
-    m_world->SetGravity(b2Vec2(gravity.x, gravity.y));
+void LiquidFunExample::set_gravity(float x, float y) {
+    m_world->SetGravity(x, -y);
 }
