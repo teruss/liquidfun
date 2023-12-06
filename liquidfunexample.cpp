@@ -32,54 +32,23 @@ LiquidFunExample::LiquidFunExample() {
 }
 
 void LiquidFunExample::_ready() {
-    auto size = get_size();
-    auto h = 2 * size.y / size.x;
     b2BodyDef bd;
-    b2Body* ground = m_world->CreateBody(&bd);
+    b2PolygonShape shape;
+    auto ground = m_world->CreateBody(&bd);
+    auto size = get_size();
+    auto h = 2 * size.y / size.x + 1;
 
-    {
-        b2PolygonShape shape;
-        const b2Vec2 vertices[4] = {
-            b2Vec2(-4, -h-2),
-            b2Vec2(4, -h-2),
-            b2Vec2(4, -h),
-            b2Vec2(-4, -h)};
-        shape.Set(vertices, 4);
-        ground->CreateFixture(&shape, 0.0f);
-    }
+    shape.SetAsBox(4, 1, b2Vec2(0, -h), 0);
+    ground->CreateFixture(&shape, 0.0f);
 
-    {
-        b2PolygonShape shape;
-        const b2Vec2 vertices[4] = {
-            b2Vec2(-4, -h-2),
-            b2Vec2(-2, -h-2),
-            b2Vec2(-2, h+2),
-            b2Vec2(-4, h+2)};
-        shape.Set(vertices, 4);
-        ground->CreateFixture(&shape, 0.0f);
-    }
+    shape.SetAsBox(1, h, b2Vec2(-3, 0), 0);
+    ground->CreateFixture(&shape, 0.0f);
 
-    {
-        b2PolygonShape shape;
-        const b2Vec2 vertices[4] = {
-            b2Vec2(2, -h-2),
-            b2Vec2(4, -h-2),
-            b2Vec2(4, h+2),
-            b2Vec2(2, h+2)};
-        shape.Set(vertices, 4);
-        ground->CreateFixture(&shape, 0.0f);
-    }
+    shape.SetAsBox(1, h, b2Vec2(3, 0), 0);
+    ground->CreateFixture(&shape, 0.0f);
 
-    {
-        b2PolygonShape shape;
-        const b2Vec2 vertices[4] = {
-            b2Vec2(-4, h),
-            b2Vec2(4, h),
-            b2Vec2(4, h+2),
-            b2Vec2(-4, h+2)};
-        shape.Set(vertices, 4);
-        ground->CreateFixture(&shape, 0.0f);
-    }
+    shape.SetAsBox(4, 1, b2Vec2(0, h), 0);
+    ground->CreateFixture(&shape, 0.0f);
 }
 
 b2Vec2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
