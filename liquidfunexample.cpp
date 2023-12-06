@@ -38,16 +38,16 @@ void LiquidFunExample::_ready() {
     auto size = get_size();
     auto h = 2 * size.y / size.x + 1;
 
-    shape.SetAsBox(4, 1, b2Vec2(0, -h), 0);
+    shape.SetAsBox(4, 1, 0, -h, 0);
     ground->CreateFixture(&shape, 0.0f);
 
-    shape.SetAsBox(1, h, b2Vec2(-3, 0), 0);
+    shape.SetAsBox(1, h, -3, 0, 0);
     ground->CreateFixture(&shape, 0.0f);
 
-    shape.SetAsBox(1, h, b2Vec2(3, 0), 0);
+    shape.SetAsBox(1, h, 3, 0, 0);
     ground->CreateFixture(&shape, 0.0f);
 
-    shape.SetAsBox(4, 1, b2Vec2(0, h), 0);
+    shape.SetAsBox(4, 1, 0, h, 0);
     ground->CreateFixture(&shape, 0.0f);
 }
 
