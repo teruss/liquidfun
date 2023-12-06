@@ -6,6 +6,7 @@
 class b2ParticleGroup;
 class b2ParticleSystem;
 class b2World;
+struct b2Vec2;
 
 namespace godot {
 
@@ -21,9 +22,6 @@ private:
     uint32_t m_groupFlags = 0;
     Color m_color;
 
-protected:
-    static void _bind_methods();
-
 public:
     LiquidFunExample();
 
@@ -33,7 +31,6 @@ public:
     void _draw() override;
     void step(float delta);
     void set_gravity(const Vector2 &gravity);
-    Vector2 convert_screen_to_world(const Vector2 &position);
 
     void set_particle_flags(int flags) {
         m_particleFlags = flags;
@@ -50,6 +47,11 @@ public:
     void reset_last_group() {
         m_lastGroup = nullptr;
     }
+
+protected:
+    static void _bind_methods();
+    Vector2 convert_screen_to_world(const Vector2 &screen_position);
+    Vector2 convert_world_to_screen(const b2Vec2 &world_position);
 };
 
 }

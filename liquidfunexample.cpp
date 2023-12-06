@@ -98,6 +98,19 @@ Vector2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
 	return p;
 }
 
+Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &world_position) {
+    auto size = get_size();
+    auto ratio = size.x / size.y;
+    auto extents = Vector2(2, 2 / ratio);
+
+    auto point = world_position;
+    auto lower = -extents;
+    auto upper = extents;
+    auto u = (point.x - lower.x) / (upper.x - lower.x);
+    auto v = (point.y - lower.y) / (upper.y - lower.y);
+    return Vector2(u * size.x, (1 - v) * size.y);
+}
+
 void LiquidFunExample::mouse_move(const Vector2 &position) {
     auto pos = convert_screen_to_world(position);
     b2CircleShape shape;
@@ -122,18 +135,10 @@ void LiquidFunExample::_draw() {
     auto positionBuffer = m_particleSystem->GetPositionBuffer();
     auto colorBuffer = m_particleSystem->GetColorBuffer();
 
-    auto size = get_size();
-    auto ratio = size.x / size.y;
-    auto extents = Vector2(2, 2 / ratio);
-
     for (int i = 0; i < particleCount; ++i) {
         auto point = positionBuffer[i];
+        auto center = convert_world_to_screen(point);
         auto color = colorBuffer[i].GetColor();
-        auto lower = -extents;
-        auto upper = extents;
-        auto u = (point.x - lower.x) / (upper.x - lower.x);
-        auto v = (point.y - lower.y) / (upper.y - lower.y);
-        auto center = Vector2(u * size.x, (1 - v) * size.y);
         draw_circle(center, 10, Color(color.r, color.g, color.b));
     }
 }
