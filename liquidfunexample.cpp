@@ -24,7 +24,7 @@ void LiquidFunExample::_bind_methods() {
 LiquidFunExample::LiquidFunExample() {
     const b2ParticleSystemDef particleSystemDef;
     b2Vec2 gravity;
-    gravity.Set(0.0f, -10.0f);
+    gravity.Set(0.0f, 10.0f);
     m_world = std::make_shared<b2World>(gravity);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
     m_particleSystem->SetRadius(0.05f);
@@ -83,7 +83,7 @@ void LiquidFunExample::_ready() {
 
 b2Vec2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
     auto size = get_size();
-	return b2Vec2(position.x * 4 / size.x - 2, (size.y * 2 - position.y * 4) / size.x);
+	return b2Vec2(position.x * 4 / size.x - 2, (position.y * 4 - size.y * 2) / size.x);
 }
 
 Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &world_position) {
@@ -96,7 +96,7 @@ Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &world_position) 
     auto upper = extents;
     auto u = (point.x - lower.x) / (upper.x - lower.x);
     auto v = (point.y - lower.y) / (upper.y - lower.y);
-    return Vector2(u * size.x, (1 - v) * size.y);
+    return Vector2(u * size.x, v * size.y);
 }
 
 void LiquidFunExample::mouse_move(const Vector2 &position) {
