@@ -81,7 +81,7 @@ void LiquidFunExample::_ready() {
     }
 }
 
-Vector2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
+b2Vec2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
     auto size = get_size();
     auto ratio = size.x / size.y;
     auto extents = Vector2(2, 2 / ratio);
@@ -92,10 +92,7 @@ Vector2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
 	auto lower = -extents;
 	auto upper = extents;
 	
-	Vector2 p;
-	p.x = (1 - u) * lower.x + u * upper.x;
-	p.y = (1 - v) * lower.y + v * upper.y;
-	return p;
+	return b2Vec2((1 - u) * lower.x + u * upper.x, (1 - v) * lower.y + v * upper.y);
 }
 
 Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &world_position) {
@@ -112,9 +109,8 @@ Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &world_position) 
 }
 
 void LiquidFunExample::mouse_move(const Vector2 &position) {
-    auto pos = convert_screen_to_world(position);
     b2CircleShape shape;
-    shape.m_p = b2Vec2(pos.x, pos.y);
+    shape.m_p = convert_screen_to_world(position);
     shape.m_radius = 0.2f;
     b2Transform xf;
     xf.SetIdentity();

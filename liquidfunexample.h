@@ -50,7 +50,7 @@ public:
 
 protected:
     static void _bind_methods();
-    Vector2 convert_screen_to_world(const Vector2 &screen_position);
+    b2Vec2 convert_screen_to_world(const Vector2 &screen_position);
     Vector2 convert_world_to_screen(const b2Vec2 &world_position);
 };
 
