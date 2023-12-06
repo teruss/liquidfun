@@ -2,6 +2,7 @@
 #define LIQUIDFUNEXAMPLE_H
 
 #include <godot_cpp/classes/control.hpp>
+#include <Box2D/Particle/b2Particle.h>
 
 class b2ParticleGroup;
 class b2ParticleSystem;
@@ -16,11 +17,10 @@ class LiquidFunExample : public Control {
 private:
     std::shared_ptr<b2World> m_world;
     b2ParticleSystem* m_particleSystem = nullptr;
-
-	b2ParticleGroup* m_lastGroup = nullptr;
+    b2ParticleGroup* m_lastGroup = nullptr;
     uint32_t m_particleFlags = 0;
     uint32_t m_groupFlags = 0;
-    Color m_color;
+    b2ParticleColor m_color;
 
 public:
     LiquidFunExample();
@@ -37,7 +37,7 @@ public:
     }
     
     void set_color(const Color &color) {
-        m_color = color;
+        m_color.Set(color.get_r8(), color.get_g8(), color.get_b8(), color.get_a8());
     }
     
     void set_group_flags(int flags) {

@@ -113,7 +113,7 @@ void LiquidFunExample::mouse_move(const Vector2 &position) {
     pd.shape = &shape;
     pd.flags = m_particleFlags;
     pd.groupFlags = m_groupFlags;
-    pd.color = b2ParticleColor(m_color.get_r8(), m_color.get_g8(), m_color.get_b8(), m_color.get_a8());
+    pd.color = m_color;
     pd.group = m_lastGroup;
     m_lastGroup = m_particleSystem->CreateParticleGroup(pd);
 }
