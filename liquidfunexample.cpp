@@ -35,10 +35,10 @@ LiquidFunExample::LiquidFunExample() {
         {
             b2PolygonShape shape;
             const b2Vec2 vertices[4] = {
-                b2Vec2(-4, -2),
+                b2Vec2(-4, -4),
+                b2Vec2(4, -4),
                 b2Vec2(4, -2),
-                b2Vec2(4, 0),
-                b2Vec2(-4, 0)};
+                b2Vec2(-4, -2)};
             shape.Set(vertices, 4);
             ground->CreateFixture(&shape, 0.0f);
         }
@@ -46,10 +46,10 @@ LiquidFunExample::LiquidFunExample() {
         {
             b2PolygonShape shape;
             const b2Vec2 vertices[4] = {
-                b2Vec2(-4, -2),
-                b2Vec2(-2, -2),
-                b2Vec2(-2, 6),
-                b2Vec2(-4, 6)};
+                b2Vec2(-4, -4),
+                b2Vec2(-2, -4),
+                b2Vec2(-2, 4),
+                b2Vec2(-4, 4)};
             shape.Set(vertices, 4);
             ground->CreateFixture(&shape, 0.0f);
         }
@@ -57,21 +57,21 @@ LiquidFunExample::LiquidFunExample() {
         {
             b2PolygonShape shape;
             const b2Vec2 vertices[4] = {
-                b2Vec2(2, -2),
-                b2Vec2(4, -2),
-                b2Vec2(4, 6),
-                b2Vec2(2, 6)};
-            shape.Set(vertices, 4);
-            ground->CreateFixture(&shape, 0.0f);
-        }
-
-        {
-            b2PolygonShape shape;
-            const b2Vec2 vertices[4] = {
-                b2Vec2(-4, 4),
+                b2Vec2(2, -4),
+                b2Vec2(4, -4),
                 b2Vec2(4, 4),
-                b2Vec2(4, 6),
-                b2Vec2(-4, 6)};
+                b2Vec2(2, 4)};
+            shape.Set(vertices, 4);
+            ground->CreateFixture(&shape, 0.0f);
+        }
+
+        {
+            b2PolygonShape shape;
+            const b2Vec2 vertices[4] = {
+                b2Vec2(-4, 2),
+                b2Vec2(4, 2),
+                b2Vec2(4, 4),
+                b2Vec2(-4, 4)};
             shape.Set(vertices, 4);
             ground->CreateFixture(&shape, 0.0f);
         }
@@ -84,13 +84,12 @@ Vector2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
     auto size = get_size();
     auto ratio = size.x / size.y;
     auto extents = Vector2(25, 25 / ratio) * 0.1;
-    auto settings_view_center = Vector2(0, 2);
 
 	auto u = position.x / size.x;
 	auto v = (size.y - position.y) / size.y;
 	
-	auto lower = settings_view_center - extents;
-	auto upper = settings_view_center + extents;
+	auto lower = -extents;
+	auto upper = extents;
 	
 	Vector2 p;
 	p.x = (1 - u) * lower.x + u * upper.x;
@@ -125,13 +124,12 @@ void LiquidFunExample::_draw() {
     auto size = get_size();
     auto ratio = size.x / size.y;
     auto extents = Vector2(25, 25 / ratio) * 0.1;
-    auto settings_view_center = Vector2(0, 2);
 
     for (int i = 0; i < particleCount; ++i) {
         auto point = positionBuffer[i];
         auto color = colorBuffer[i].GetColor();
-        auto lower = settings_view_center - extents;
-        auto upper = settings_view_center + extents;
+        auto lower = -extents;
+        auto upper = extents;
         auto u = (point.x - lower.x) / (upper.x - lower.x);
         auto v = (point.y - lower.y) / (upper.y - lower.y);
         auto center = Vector2(u * size.x, (1 - v) * size.y);
