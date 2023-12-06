@@ -83,16 +83,7 @@ void LiquidFunExample::_ready() {
 
 b2Vec2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
     auto size = get_size();
-    auto ratio = size.x / size.y;
-    auto extents = Vector2(2, 2 / ratio);
-
-	auto u = position.x / size.x;
-	auto v = (size.y - position.y) / size.y;
-	
-	auto lower = -extents;
-	auto upper = extents;
-	
-	return b2Vec2((1 - u) * lower.x + u * upper.x, (1 - v) * lower.y + v * upper.y);
+	return b2Vec2(position.x * 4 / size.x - 2, (size.y * 2 - position.y * 4) / size.x);
 }
 
 Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &world_position) {
