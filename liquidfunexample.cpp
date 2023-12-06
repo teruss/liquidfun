@@ -28,6 +28,7 @@ LiquidFunExample::LiquidFunExample() {
     m_world = std::make_shared<b2World>(gravity);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
     m_particleSystem->SetRadius(0.05f);
+    set_color(Color("AQUA"));
 }
 
 void LiquidFunExample::_ready() {
