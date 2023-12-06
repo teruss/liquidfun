@@ -29,6 +29,7 @@ public:
 
     int get_particle_count();
     void mouse_move(const Vector2 &pos);
+    void _ready() override;
     void _draw() override;
     void step(float delta);
     void set_gravity(const Vector2 &gravity);

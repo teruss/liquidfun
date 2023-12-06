@@ -27,63 +27,64 @@ LiquidFunExample::LiquidFunExample() {
     gravity.Set(0.0f, -10.0f);
     m_world = std::make_shared<b2World>(gravity);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
+    m_particleSystem->SetRadius(0.05f);
+}
+
+void LiquidFunExample::_ready() {
+    auto size = get_size();
+    auto h = 2 * size.y / size.x;
+    b2BodyDef bd;
+    b2Body* ground = m_world->CreateBody(&bd);
 
     {
-        b2BodyDef bd;
-        b2Body* ground = m_world->CreateBody(&bd);
-
-        {
-            b2PolygonShape shape;
-            const b2Vec2 vertices[4] = {
-                b2Vec2(-4, -4),
-                b2Vec2(4, -4),
-                b2Vec2(4, -2),
-                b2Vec2(-4, -2)};
-            shape.Set(vertices, 4);
-            ground->CreateFixture(&shape, 0.0f);
-        }
-
-        {
-            b2PolygonShape shape;
-            const b2Vec2 vertices[4] = {
-                b2Vec2(-4, -4),
-                b2Vec2(-2, -4),
-                b2Vec2(-2, 4),
-                b2Vec2(-4, 4)};
-            shape.Set(vertices, 4);
-            ground->CreateFixture(&shape, 0.0f);
-        }
-
-        {
-            b2PolygonShape shape;
-            const b2Vec2 vertices[4] = {
-                b2Vec2(2, -4),
-                b2Vec2(4, -4),
-                b2Vec2(4, 4),
-                b2Vec2(2, 4)};
-            shape.Set(vertices, 4);
-            ground->CreateFixture(&shape, 0.0f);
-        }
-
-        {
-            b2PolygonShape shape;
-            const b2Vec2 vertices[4] = {
-                b2Vec2(-4, 2),
-                b2Vec2(4, 2),
-                b2Vec2(4, 4),
-                b2Vec2(-4, 4)};
-            shape.Set(vertices, 4);
-            ground->CreateFixture(&shape, 0.0f);
-        }
+        b2PolygonShape shape;
+        const b2Vec2 vertices[4] = {
+            b2Vec2(-4, -h-2),
+            b2Vec2(4, -h-2),
+            b2Vec2(4, -h),
+            b2Vec2(-4, -h)};
+        shape.Set(vertices, 4);
+        ground->CreateFixture(&shape, 0.0f);
     }
 
-    m_particleSystem->SetRadius(0.05f);
+    {
+        b2PolygonShape shape;
+        const b2Vec2 vertices[4] = {
+            b2Vec2(-4, -h-2),
+            b2Vec2(-2, -h-2),
+            b2Vec2(-2, h+2),
+            b2Vec2(-4, h+2)};
+        shape.Set(vertices, 4);
+        ground->CreateFixture(&shape, 0.0f);
+    }
+
+    {
+        b2PolygonShape shape;
+        const b2Vec2 vertices[4] = {
+            b2Vec2(2, -h-2),
+            b2Vec2(4, -h-2),
+            b2Vec2(4, h+2),
+            b2Vec2(2, h+2)};
+        shape.Set(vertices, 4);
+        ground->CreateFixture(&shape, 0.0f);
+    }
+
+    {
+        b2PolygonShape shape;
+        const b2Vec2 vertices[4] = {
+            b2Vec2(-4, h),
+            b2Vec2(4, h),
+            b2Vec2(4, h+2),
+            b2Vec2(-4, h+2)};
+        shape.Set(vertices, 4);
+        ground->CreateFixture(&shape, 0.0f);
+    }
 }
 
 Vector2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
     auto size = get_size();
     auto ratio = size.x / size.y;
-    auto extents = Vector2(25, 25 / ratio) * 0.1;
+    auto extents = Vector2(2, 2 / ratio);
 
 	auto u = position.x / size.x;
 	auto v = (size.y - position.y) / size.y;
@@ -123,7 +124,7 @@ void LiquidFunExample::_draw() {
 
     auto size = get_size();
     auto ratio = size.x / size.y;
-    auto extents = Vector2(25, 25 / ratio) * 0.1;
+    auto extents = Vector2(2, 2 / ratio);
 
     for (int i = 0; i < particleCount; ++i) {
         auto point = positionBuffer[i];
