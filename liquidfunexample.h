@@ -4,6 +4,7 @@
 #include <godot_cpp/classes/control.hpp>
 #include <Box2D/Particle/b2Particle.h>
 
+class b2DestructionListener;
 class b2ParticleGroup;
 class b2ParticleSystem;
 class b2World;
@@ -21,6 +22,7 @@ private:
     uint32_t m_particleFlags = 0;
     uint32_t m_groupFlags = 0;
     b2ParticleColor m_color;
+    std::shared_ptr<b2DestructionListener> m_destructionListener;
 
 public:
     LiquidFunExample();
@@ -31,6 +33,7 @@ public:
     void _draw() override;
     void step(float delta);
     void set_gravity(float x, float y);
+    void particle_group_destroyed(b2ParticleGroup* group);
 
     void set_particle_flags(int flags) {
         m_particleFlags = flags;

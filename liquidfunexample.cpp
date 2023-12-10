@@ -5,10 +5,24 @@
 #include <Box2D/Common/b2Draw.h>
 #include <Box2D/Dynamics/b2Body.h>
 #include <Box2D/Dynamics/b2World.h>
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
 #include <Box2D/Particle/b2ParticleGroup.h>
 #include <Box2D/Particle/b2ParticleSystem.h>
 
 using namespace godot;
+
+class DestructionListener : public b2DestructionListener {
+    LiquidFunExample* m_app;
+public:
+    DestructionListener(LiquidFunExample* app) : m_app(app) {
+    }
+
+    void SayGoodbye(b2Fixture* fixture) { B2_NOT_USED(fixture); }
+    void SayGoodbye(b2Joint* joint) { B2_NOT_USED(joint); }
+    void SayGoodbye(b2ParticleGroup* group) {
+        m_app->particle_group_destroyed(group);
+    }
+};
 
 void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("step"), &LiquidFunExample::step);
@@ -23,9 +37,11 @@ void LiquidFunExample::_bind_methods() {
 
 LiquidFunExample::LiquidFunExample() {
     const b2ParticleSystemDef particleSystemDef;
-    m_world = std::make_shared<b2World>(0, 10);
+    m_world = std::make_shared<b2World>(0.0f, 10.0f);
     m_particleSystem = m_world->CreateParticleSystem(&particleSystemDef);
     m_particleSystem->SetRadius(0.05f);
+    m_destructionListener = std::make_shared<DestructionListener>(this);
+    m_world->SetDestructionListener(m_destructionListener.get());
     set_color(Color("AQUA"));
 }
 
@@ -51,7 +67,7 @@ void LiquidFunExample::_ready() {
 
 b2Vec2 LiquidFunExample::convert_screen_to_world(const Vector2 &position) {
     auto size = get_size();
-	return b2Vec2(position.x * 4 / size.x - 2, (position.y * 4 - size.y * 2) / size.x);
+    return b2Vec2(position.x * 4 / size.x - 2, (position.y * 4 - size.y * 2) / size.x);
 }
 
 Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &position) {
@@ -98,4 +114,11 @@ int LiquidFunExample::get_particle_count() {
 
 void LiquidFunExample::set_gravity(float x, float y) {
     m_world->SetGravity(x, -y);
+}
+
+void LiquidFunExample::particle_group_destroyed(b2ParticleGroup* group) {
+    if (group == m_lastGroup)
+    {
+        m_lastGroup = nullptr;
+    }
 }
