@@ -105,6 +105,10 @@ void LiquidFunExample::_draw() {
 }
 
 void LiquidFunExample::step(float delta) {
+    if (m_particleSystem->GetAllParticleFlags() & b2_zombieParticle)
+    {
+        split_particle_groups();
+    }
     m_world->Step(delta, 8, 3, 3);
 }
 
@@ -120,5 +124,15 @@ void LiquidFunExample::particle_group_destroyed(b2ParticleGroup* group) {
     if (group == m_lastGroup)
     {
         m_lastGroup = nullptr;
+    }
+}
+
+void LiquidFunExample::split_particle_groups() {
+    for (b2ParticleGroup* group = m_particleSystem->GetParticleGroupList(); group; group = group->GetNext()) {
+        if (group != m_lastGroup && (group->GetGroupFlags() & b2_rigidParticleGroup) && (group->GetAllParticleFlags() & b2_zombieParticle)) {
+            // Split a rigid particle group which may be disconnected
+            // by destroying particles.
+            m_particleSystem->SplitParticleGroup(group);
+        }
     }
 }
