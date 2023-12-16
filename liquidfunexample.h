@@ -19,6 +19,8 @@ private:
     std::shared_ptr<b2World> m_world;
     b2ParticleSystem* m_particleSystem = nullptr;
     b2ParticleGroup* m_lastGroup = nullptr;
+    bool m_drawing = true;
+    bool m_mouseTracing = false;
     uint32_t m_particleFlags = 0;
     uint32_t m_groupFlags = 0;
     b2ParticleColor m_color;
@@ -45,6 +47,14 @@ public:
     
     void set_group_flags(int flags) {
         m_groupFlags = flags;
+    }
+
+    void set_drawing(bool drawing) {
+        m_drawing = drawing;
+    }
+
+    void set_mouse_tracing(bool mouseTracing) {
+        m_mouseTracing = mouseTracing;
     }
 
     void reset_last_group() {

@@ -33,6 +33,8 @@ void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("set_color"), &LiquidFunExample::set_color);
     ClassDB::bind_method(D_METHOD("reset_last_group"), &LiquidFunExample::reset_last_group);
     ClassDB::bind_method(D_METHOD("set_gravity"), &LiquidFunExample::set_gravity);
+    ClassDB::bind_method(D_METHOD("set_drawing"), &LiquidFunExample::set_drawing);
+    ClassDB::bind_method(D_METHOD("set_mouse_tracing"), &LiquidFunExample::set_mouse_tracing);
 }
 
 LiquidFunExample::LiquidFunExample() {
@@ -76,21 +78,23 @@ Vector2 LiquidFunExample::convert_world_to_screen(const b2Vec2 &position) {
 }
 
 void LiquidFunExample::mouse_move(const Vector2 &position) {
-    b2CircleShape shape;
-    shape.m_p = convert_screen_to_world(position);
-    shape.m_radius = 0.2f;
-    b2Transform xf;
-    xf.SetIdentity();
+    if (m_drawing) {
+        b2CircleShape shape;
+        shape.m_p = convert_screen_to_world(position);
+        shape.m_radius = 0.2f;
+        b2Transform xf;
+        xf.SetIdentity();
 
-    m_particleSystem->DestroyParticlesInShape(shape, xf);
+        m_particleSystem->DestroyParticlesInShape(shape, xf);
 
-    b2ParticleGroupDef pd;
-    pd.shape = &shape;
-    pd.flags = m_particleFlags;
-    pd.groupFlags = m_groupFlags;
-    pd.color = m_color;
-    pd.group = m_lastGroup;
-    m_lastGroup = m_particleSystem->CreateParticleGroup(pd);
+        b2ParticleGroupDef pd;
+        pd.shape = &shape;
+        pd.flags = m_particleFlags;
+        pd.groupFlags = m_groupFlags;
+        pd.color = m_color;
+        pd.group = m_lastGroup;
+        m_lastGroup = m_particleSystem->CreateParticleGroup(pd);
+    }
 }
 
 void LiquidFunExample::_draw() {
@@ -136,3 +140,4 @@ void LiquidFunExample::split_particle_groups() {
         }
     }
 }
+
