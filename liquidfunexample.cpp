@@ -97,6 +97,7 @@ void LiquidFunExample::mouse_move(const Vector2 &position) {
         pd.color = m_color;
         pd.group = m_lastGroup;
         m_lastGroup = m_particleSystem->CreateParticleGroup(pd);
+        m_mouseTracing = false;
     }
 }
 
