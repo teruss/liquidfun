@@ -34,7 +34,10 @@ void LiquidFunExample::_bind_methods() {
     ClassDB::bind_method(D_METHOD("reset_last_group"), &LiquidFunExample::reset_last_group);
     ClassDB::bind_method(D_METHOD("set_gravity"), &LiquidFunExample::set_gravity);
     ClassDB::bind_method(D_METHOD("set_drawing"), &LiquidFunExample::set_drawing);
+    ClassDB::bind_method(D_METHOD("set_mouse_world"), &LiquidFunExample::set_mouse_world);
     ClassDB::bind_method(D_METHOD("set_mouse_tracing"), &LiquidFunExample::set_mouse_tracing);
+    ClassDB::bind_method(D_METHOD("set_mouse_tracer_position"), &LiquidFunExample::set_mouse_tracer_position);
+    ClassDB::bind_method(D_METHOD("set_mouse_tracer_velocity"), &LiquidFunExample::set_mouse_tracer_velocity);
 }
 
 LiquidFunExample::LiquidFunExample() {
@@ -108,12 +111,65 @@ void LiquidFunExample::_draw() {
     }
 }
 
-void LiquidFunExample::step(float delta) {
-    if (m_particleSystem->GetAllParticleFlags() & b2_zombieParticle)
-    {
+class QueryCallback2 : public b2QueryCallback
+{
+public:
+	QueryCallback2(b2ParticleSystem* particleSystem,
+				   const b2Shape* shape, const b2Vec2& velocity)
+	{
+		m_particleSystem = particleSystem;
+		m_shape = shape;
+		m_velocity = velocity;
+	}
+
+	bool ReportFixture(b2Fixture* fixture)
+	{
+		B2_NOT_USED(fixture);
+		return false;
+	}
+
+	bool ReportParticle(const b2ParticleSystem* particleSystem, int32 index)
+	{
+		if (particleSystem != m_particleSystem)
+			return false;
+
+		b2Transform xf;
+		xf.SetIdentity();
+		b2Vec2 p = m_particleSystem->GetPositionBuffer()[index];
+		if (m_shape->TestPoint(xf, p))
+		{
+			b2Vec2& v = m_particleSystem->GetVelocityBuffer()[index];
+			v = m_velocity;
+		}
+		return true;
+	}
+
+	b2ParticleSystem* m_particleSystem;
+	const b2Shape* m_shape;
+	b2Vec2 m_velocity;
+};
+
+void LiquidFunExample::step(float timeStep) {
+    if (m_particleSystem->GetAllParticleFlags() & b2_zombieParticle) {
         split_particle_groups();
     }
-    m_world->Step(delta, 8, 3, 3);
+    m_world->Step(timeStep, 8, 3, 3);
+
+    if (m_mouseTracing) {
+        float32 delay = 0.1f;
+        b2Vec2 acceleration = 2 / delay * (1 / delay * (m_mouseWorld - m_mouseTracerPosition) - m_mouseTracerVelocity);
+        m_mouseTracerVelocity += timeStep * acceleration;
+        m_mouseTracerPosition += timeStep * m_mouseTracerVelocity;
+        b2CircleShape shape;
+        shape.m_p = m_mouseTracerPosition;
+        shape.m_radius = 0.2f;
+        QueryCallback2 callback(m_particleSystem, &shape, m_mouseTracerVelocity);
+        b2AABB aabb;
+        b2Transform xf;
+        xf.SetIdentity();
+        shape.ComputeAABB(&aabb, xf, 0);
+        m_world->QueryAABB(&callback, aabb);
+    }
 }
 
 int LiquidFunExample::get_particle_count() {

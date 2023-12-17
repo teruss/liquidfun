@@ -20,7 +20,10 @@ private:
     b2ParticleSystem* m_particleSystem = nullptr;
     b2ParticleGroup* m_lastGroup = nullptr;
     bool m_drawing = true;
+    b2Vec2 m_mouseWorld = b2Vec2_zero;
     bool m_mouseTracing = false;
+    b2Vec2 m_mouseTracerPosition = b2Vec2_zero;
+    b2Vec2 m_mouseTracerVelocity = b2Vec2_zero;
     uint32_t m_particleFlags = 0;
     uint32_t m_groupFlags = 0;
     b2ParticleColor m_color;
@@ -53,8 +56,20 @@ public:
         m_drawing = drawing;
     }
 
+    void set_mouse_world(const Vector2 &mouseWorld) {
+        m_mouseWorld = convert_screen_to_world(mouseWorld);
+    }
+
     void set_mouse_tracing(bool mouseTracing) {
         m_mouseTracing = mouseTracing;
+    }
+
+    void set_mouse_tracer_position(const Vector2 &mouseTracerPosition) {
+        m_mouseTracerPosition = convert_screen_to_world(mouseTracerPosition);
+    }
+
+    void set_mouse_tracer_velocity(const Vector2 &mouseTracerVelocity) {
+        m_mouseTracerVelocity = convert_screen_to_world(mouseTracerVelocity);
     }
 
     void reset_last_group() {
